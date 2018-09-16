@@ -1,0 +1,30 @@
+.dropdown-item{
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+/* Help on how to fade obtained from here:
+ * https://stackoverflow.com/questions/18748241/text-color-with-fading-over-time-effect
+ */
+.fading {
+  -webkit-animation-duration: 2.5s;
+  -webkit-animation-name: fading;
+  animation-duration: 2.5s;
+  animation-name: fading;
+}
+@-webkit-keyframes fading {
+  from {
+    color: white;
+  }
+  to {
+    color: black;
+  }
+}
+@keyframes fading {
+  from {
+    color: white;
+  }
+  to {
+    color: black;
+  }
+}
