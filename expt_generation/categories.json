@@ -12,5 +12,5 @@
   "asia":["China", "Japan", "India", "Vietnam"],
   "africa":["Kenya", "Ethiopia", "Sudan", "Ghana"],
   "fruit":["Banana", "Apple", "Pear", "Mango"],
-  "animal":["Cat", "Dog", "Monkey", "Elephant"],
+  "animal":["Cat", "Dog", "Monkey", "Elephant"]
 }
