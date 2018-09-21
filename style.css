@@ -1,3 +1,7 @@
+.selected {
+  color: blue;
+}
+
 .dropdown-item{
   padding-bottom: 0;
   padding-top: 0;

@@ -1,20 +1,27 @@
-let index = 0;
+$.get({
+    url: "expt_generation/experiment_data.json",
+    success: function (data) {
+      console.log(data);
+      var exp = data[0];
+      changeMenu(exp["experiment_blocks"]["control"][0], exp["selection_locations"][0], exp["predicted_locations"][0]);
+    },
+    error: function (err){
+      console.log("error");
+    }
+});
 
-let categories = ["Fruits", "Vegetables", "Animals", "Furniture"];
-let words = {
-  "Fruits": ["Apple", "Banana", "Mango", "Pear"],
-  "Vegetables": ["Carrot", "Celery", "Broccoli", "Cauliflower"],
-  "Animals": ["Dog", "Cat", "Monkey", "Donkey"],
-  "Furniture": ["Chair", "Table", "Sofa", "Desk"]
-};
+function changeMenu(all_words, answer, preds){
+  words = all_words["words"];
 
-for (let i = 1; i<4; i++){
-  for (let j = 1; j<5; j++){
-    for (let k = 1; k<5; k++){
-      let id = "#menu" + i + "-section" + j + "-item" + k;
-      $(id).text(words[categories[j-1]][k-1]);
-      if (Math.random() < 0.25){
-        $(id).addClass("fading");
+  for (let i = 0; i<words.length; i++){
+    for (let j = 0; j<4; j++){
+      for (let k = 0; k<4; k++){
+        let id = "#menu" + (i+1) + "-section" + (j+1) + "-item" + (k+1);
+        let index = j*4+k;
+        $(id).text(words[i][index]);
+        if (i==answer[0] && index == answer[1]){
+          $(id).css("color","blue");
+        }
       }
     }
   }
