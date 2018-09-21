@@ -7,9 +7,9 @@
  * https://stackoverflow.com/questions/18748241/text-color-with-fading-over-time-effect
  */
 .fading {
-  -webkit-animation-duration: 2.5s;
+  -webkit-animation-duration: 0.5s;
   -webkit-animation-name: fading;
-  animation-duration: 2.5s;
+  animation-duration: 0.5s;
   animation-name: fading;
 }
 @-webkit-keyframes fading {
