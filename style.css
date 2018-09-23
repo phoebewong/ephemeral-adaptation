@@ -1,5 +1,9 @@
-.selected {
-  color: blue;
+h1 {
+  padding: 10px;
+}
+
+p {
+  padding-left:10px;
 }
 
 .dropdown-item{
@@ -13,7 +17,7 @@
 .fading {
   -webkit-animation-duration: 0.5s;
   -webkit-animation-name: fading;
-  animation-duration: 0.5s;
+  animation-duration: 2s;
   animation-name: fading;
 }
 @-webkit-keyframes fading {
