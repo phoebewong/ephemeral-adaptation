@@ -12,3 +12,4 @@
 2. Survey before and after (google forms)
 3. Transition between two information and experiment
 4. Introduction text and conclusion text
+5. Fill out practice section
