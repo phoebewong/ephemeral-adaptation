@@ -12,9 +12,24 @@
     <title>Ephemeral Adaptation</title>
   </head>
   <body>
-    <h1 id="prompt">Here are some instructions about the experiment</h1>
+    <h1 id="prompt"></h1>
 
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<h1 class="introduction">Welcome to the Ephemeral Adaptation User Study</h1>
+		<h2 class="introduction">Here is some information about the study.</h2>
+		<h3 class="introduction">Here is more information about the study. Click the button to begin.</h2>
+		<button type="button" class="btn btn-primary introduction" id="introduction_button">Start Experiment</button>
+
+		<h1 class="middle">You are in between sections</h1>
+		<h2 class="middle">Here is some information about the rest of the study.</h2>
+		<h3 class="middle">Here is more information about the rest of the study. Click the button to resume.</h2>
+		<button type="button" class="btn btn-primary middle" id="middle_button">Proceed to next section</button>
+
+		<h1 class="end">The study has now ended</h1>
+		<h2 class="end">Thank you for your participation.</h2>
+		<h3 class="end">Please fill out this anonymous google form.</h2>
+		<button type="button" class="btn btn-primary end" id="end_button" onClick="parent.location='https://sites.google.com/g.harvard.edu/cs-279-fall-2018/home'">Done, take me to the Google Form</button>
+
+		<nav class="navbar navbar-expand-lg navbar-light bg-light" id="experiment">
 
 		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 		    <ul class="navbar-nav mr-auto">
@@ -105,16 +120,17 @@
 		  </div>
 		</nav>
 		<br>
-		<p id="experiment_number">Experiment Number: </p>
-		<p id="condition_order">Condition Order: </p>
-		<p id="technique">Technique: </p>
-		<p id="block_number">Block Number: </p>
-		<p id="trial_number">Trial Number: </p>
-		<p id="correct_id">Correct ID: </p>
-		<p id="answer">Answer: </p>
-		<p id="correct_word">Correct Word: </p>
-		<p id="num_trials">Num Trials: </p>
-		<p id="predicted_words">Predicted Words: </p>
+
+		<p id="experiment_number log"></p>
+		<p id="condition_order log"></p>
+		<p id="technique log"></p>
+		<p id="block_number log"></p>
+		<p id="trial_number log"></p>
+		<p id="correct_id log"></p>
+		<p id="answer log"></p>
+		<p id="correct_word log"></p>
+		<p id="num_trials log"></p>
+		<p id="predicted_words log"></p>
 
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>

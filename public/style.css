@@ -1,9 +1,13 @@
-h1 {
+h1, h2, h3 {
   padding: 10px;
 }
 
 p {
   padding-left:10px;
+}
+
+button {
+  margin: 10px;
 }
 
 .dropdown-item{

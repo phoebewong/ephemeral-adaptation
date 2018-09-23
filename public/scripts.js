@@ -169,4 +169,22 @@ function change_menu(words, answer, preds){
 
 $(document).ready(function() {
   init();
+  $("#experiment").hide();
+  $(".introduction").show();
+  $(".middle").hide();
+  $(".end").hide();
+  $("#log").hide();
+  $("#prompt").hide();
+});
+
+$("#introduction_button").on("click", function(){
+  $(".introduction").hide();
+  $("#experiment").show();
+  $("#prompt").show();
+});
+
+$("#middle_button").on("click", function(){
+  $(".middle").hide();
+  $("#experiment").show();
+  $("#prompt").show();
 });
