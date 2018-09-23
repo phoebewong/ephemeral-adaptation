@@ -37,7 +37,7 @@ function init(){
         exp = data[experiment_number];
         condition_order = exp["condition_order"];
         // num_trials = exp["predicted_locations"].length;
-        num_trials = 4; // Test with a smaller number of trials
+        num_trials = 1; // Test with a smaller number of trials
         update();
       },
       error: function (err){
@@ -123,13 +123,26 @@ function set_listener(){
   });
 }
 
-function record_results(){
+// A function to accept an object and POST it to the server as JSON
+function record_results() {
   let all_data = {
     "experiment_number": experiment_number,
     "correct_times": times,
     "order": condition_order
   };
-
+	console.log("Posting data");
+	$.ajax({
+		url: "/save",
+		contentType: "application/json",
+		type: "POST",
+		data: JSON.stringify(all_data),
+		error: function (resp) {
+			console.log(resp);
+		},
+		success: function (resp) {
+			console.log(resp);
+		}
+	});
 }
 
 function change_menu(words, answer, preds){

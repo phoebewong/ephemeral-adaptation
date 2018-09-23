@@ -8,5 +8,7 @@
 
 ## TODO
 
-1. Timing
-2. Save information in json
+1. Qualitative information
+2. Survey before and after (google forms)
+3. Transition between two information and experiment
+4. Introduction text and conclusion text

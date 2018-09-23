@@ -4,6 +4,7 @@ var Request = require('request');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
 var config = require('./expt_generation/experiment_data.json');
+var creds = require('./credentials.json');
 
 //Create an 'express' object
 var app = express();
@@ -22,10 +23,10 @@ app.use(bodyParser.json());
 /*---------------
 //DATABASE CONFIG
 ----------------*/
-var cloudant_USER = 'YOUR-USER-NAME';
-var cloudant_DB = 'YOUR-DB-NAME';
-var cloudant_KEY = 'YOUR-DB-KEY';
-var cloudant_PASSWORD = 'YOUR-DB-PASSWORD';
+var cloudant_USER = creds.cloudant_USER;
+var cloudant_DB = creds.cloudant_DB;
+var cloudant_KEY = creds.cloudant_KEY;
+var cloudant_PASSWORD = creds.cloudant_PASSWORD;
 
 var cloudant_URL = "https://" + cloudant_USER + ".cloudant.com/" + cloudant_DB;
 
@@ -57,17 +58,6 @@ app.post("/save", function(req,res){
 		},
 		json: true,
 		body: data
-	},
-	function (error, response, body){
-		if (response.statusCode == 201){
-			console.log("Saved!");
-			res.json(body);
-		}
-		else{
-			console.log("Uh oh...");
-			console.log("Error: " + res.statusCode);
-			res.send("Something went wrong...");
-		}
 	});
 });
 
