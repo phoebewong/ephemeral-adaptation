@@ -11,18 +11,33 @@ let correct_word;
 let num_trials;
 let abrupt_onset_words = [];
 let end = 0;
+let start = 0;
+let stop = 0;
+let correct_menu;
+let started = 0;
+
+let times = {
+  "control": {
+    0 : [],
+    1 : []
+  },
+  "ephemeral": {
+    0 : [],
+    1 : []
+  }
+};
 
 function init(){
   $.get({
-      url: "expt_generation/experiment_data.json",
+      url: "/data",
       success: function (data) {
         console.log(data);
         let len = data.length;
         experiment_number = Math.floor(Math.random()*len);
         exp = data[experiment_number];
         condition_order = exp["condition_order"];
-        num_trials = exp["predicted_locations"].length;
-        // num_trials = 4; // Test with a smaller number of trials
+        // num_trials = exp["predicted_locations"].length;
+        num_trials = 4; // Test with a smaller number of trials
         update();
       },
       error: function (err){
@@ -46,6 +61,8 @@ function log(){
 
 function increment_numbers(){
   $(correct_id).prop("onclick", null).off("click");
+  $("#menu" + correct_menu).prop("onclick", null).off("click");
+  started = 0;
   if(trial_number == num_trials-1){
     trial_number = 0;
     block_number = block_number+1;
@@ -64,12 +81,16 @@ function increment_numbers(){
   if (end !== 1){
     update();
   }
+  else {
+    record_results();
+  }
 }
 
 function update(){
   technique = condition_order[condition];
   answer = exp["selection_locations"][trial_number];
   let menu = answer[0]+1;
+  correct_menu = menu;
   let section = Math.floor(answer[1]/4)+1;
   let item = (answer[1]%4)+1;
   correct_id = "#menu" + menu + "-section" + section + "-item" + item;
@@ -90,9 +111,25 @@ function update(){
 
 function set_listener(){
   $(correct_id).on("click", function(){
-    console.log("clicked");
+    stop = Date.now();
+    times[technique][condition].push(stop-start)
     increment_numbers();
   });
+  $("#menu"+correct_menu).on("click", function(){
+    if (started == 0){
+      started = 1;
+      start = Date.now();
+    }
+  });
+}
+
+function record_results(){
+  let all_data = {
+    "experiment_number": experiment_number,
+    "correct_times": times,
+    "order": condition_order
+  };
+
 }
 
 function change_menu(words, answer, preds){

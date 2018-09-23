@@ -4,6 +4,7 @@
 
 1. Low vs high accuracy distinction
 2. Reduce number of trials
+3. Randomize per user?
 
 ## TODO
 
