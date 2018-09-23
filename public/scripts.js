@@ -171,20 +171,27 @@ $(document).ready(function() {
   init();
   $("#experiment").hide();
   $(".introduction").show();
-  $(".middle").hide();
+  $(".intermediate-1").hide();
+  $(".intermediate-2").hide();
   $(".end").hide();
   $("#log").hide();
   $("#prompt").hide();
 });
 
-$("#introduction_button").on("click", function(){
+$("#introduction-button").on("click", function(){
   $(".introduction").hide();
   $("#experiment").show();
   $("#prompt").show();
 });
 
-$("#middle_button").on("click", function(){
-  $(".middle").hide();
+$("#intermediate-button-1").on("click", function(){
+  $(".intermediate-1").hide();
+  $("#experiment").show();
+  $("#prompt").show();
+});
+
+$("#intermediate-button-2").on("click", function(){
+  $(".intermediate-2").hide();
   $("#experiment").show();
   $("#prompt").show();
 });

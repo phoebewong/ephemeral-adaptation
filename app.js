@@ -39,6 +39,14 @@ app.get("/", function(req, res){
 	res.render('index');
 });
 
+app.get("/practice", function(req, res){
+	res.render('practice.html');
+});
+
+app.get("/landing", function(req, res){
+	res.render('landing.html');
+});
+
 app.get("/data", function(req, res){
 	res.json(config);
 });
