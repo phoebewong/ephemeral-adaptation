@@ -1,0 +1,16 @@
+{
+  "furniture": ["Chair", "Table", "Sofa", "Desk"],
+  "wine":["Merlot", "Shiraz", "Cabernet", "Chardonnay"],
+  "planets":["Saturn", "Venus", "Jupiter", "Mercury"],
+  "europe": ["France", "England", "Germany", "Spain"],
+  "nuts":["Pecan", "Walnut", "Almond", "Pistachio"],
+  "gems":["Sapphire", "Topaz", "Pearl", "Emerald"],
+  "flying": ["Blimp", "Helicopter", "Airplane", "Balloon"],
+  "monster":["Minotaur", "Sasquatch","Ogopogo", "Bigfoot"],
+  "oil":["Sunflower", "Canola", "Olive", "Sesame"],
+  "sports": ["Football", "Baseball", "Soccer", "Basketball"],
+  "asia":["China", "Japan", "India", "Vietnam"],
+  "africa":["Kenya", "Ethiopia", "Sudan", "Ghana"],
+  "fruit":["Banana", "Apple", "Pear", "Mango"],
+  "animal":["Cat", "Dog", "Monkey", "Elephant"],
+}
