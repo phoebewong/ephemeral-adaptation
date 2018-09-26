@@ -37,7 +37,7 @@ function init(){
         exp = data[experiment_number];
         condition_order = exp["condition_order"];
         // num_trials = exp["predicted_locations"].length;
-        num_trials = 1; // Test with a smaller number of trials
+        num_trials = 5; // Test with a smaller number of trials
         update();
       },
       error: function (err){
@@ -112,7 +112,7 @@ function update(){
 function set_listener(){
   $(correct_id).on("click", function(){
     stop = Date.now();
-    times[technique][condition].push(stop-start)
+    times[technique][block_number].push(stop-start)
     increment_numbers();
   });
   $("#menu"+correct_menu).on("click", function(){
