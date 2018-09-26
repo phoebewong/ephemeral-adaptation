@@ -53,10 +53,8 @@ app.get("/data", function(req, res){
 
 //SAVE an object to the db
 app.post("/save", function(req,res){
-	console.log("A POST!!!!");
 	//Get the data from the body
 	var data = req.body;
-	console.log(data);
 	//Send the data to the db
 	Request.post({
 		url: cloudant_URL,

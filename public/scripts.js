@@ -16,6 +16,13 @@ let stop = 0;
 let correct_menu;
 let started = 0;
 
+let data = {
+  "condition_sequence": "",
+  "experiment_number": "",
+  "number_trials": "",
+  "trials": []
+}
+
 let times = {
   "control": {
     0 : [],
@@ -37,7 +44,7 @@ function init(){
         exp = data[experiment_number];
         condition_order = exp["condition_order"];
         // num_trials = exp["predicted_locations"].length;
-        num_trials = 5; // Test with a smaller number of trials
+        num_trials = 3; // Test with a smaller number of trials
         update();
       },
       error: function (err){
@@ -46,7 +53,7 @@ function init(){
   });
 }
 
-function log(){
+function debug(){
   $("#experiment_number").text("Experiment Number: " + experiment_number);
   $("#technique").text("Technique: " + technique);
   $("#condition_order").text("Condition Order: " + condition_order);
@@ -105,14 +112,32 @@ function update(){
   correct_word = words[answer[0]][answer[1]];
   $("#prompt").text("Menu " + menu + " -> " + correct_word);
   change_menu(words, correct, preds);
-  log();
+  debug();
   set_listener();
+}
+
+function log_values(time){
+  let trial = {
+    "trial_number": trial_number,
+    "correct_menu": correct_menu,
+    "menu_index": answer[1],
+    "selection_time": time,
+    "condition": condition_order[condition],
+    "block_number": block_number,
+    "correct_word": correct_word,
+    "predicted_words": abrupt_onset_words,
+    "incorrect_attempts": 0,
+    "incorrect_words": [],
+    "incorrect_click_times":[]
+  };
+  data["trials"].push(trial);
 }
 
 function set_listener(){
   $(correct_id).on("click", function(){
     stop = Date.now();
     times[technique][block_number].push(stop-start)
+    log_values(stop-start);
     increment_numbers();
   });
   $("#menu"+correct_menu).on("click", function(){
@@ -125,17 +150,16 @@ function set_listener(){
 
 // A function to accept an object and POST it to the server as JSON
 function record_results() {
-  let all_data = {
-    "experiment_number": experiment_number,
-    "correct_times": times,
-    "order": condition_order
-  };
+  data["condition_sequence"] = condition_order;
+  data["experiment_number"] = experiment_number;
+  data["number_trials"] = num_trials;
+
 	console.log("Posting data");
 	$.ajax({
 		url: "/save",
 		contentType: "application/json",
 		type: "POST",
-		data: JSON.stringify(all_data),
+		data: JSON.stringify(data),
 		error: function (resp) {
 			console.log(resp);
 		},
