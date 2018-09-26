@@ -21,7 +21,7 @@ button {
 .fading {
   -webkit-animation-duration: 0.5s;
   -webkit-animation-name: fading;
-  animation-duration: 2s;
+  animation-duration: 0.5s;
   animation-name: fading;
 }
 @-webkit-keyframes fading {

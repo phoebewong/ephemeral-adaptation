@@ -90,6 +90,7 @@ function increment_numbers(){
   }
   else {
     record_results();
+    end_experiment();
   }
 }
 
@@ -165,6 +166,12 @@ function record_results() {
 			console.log(resp);
 		}
 	});
+}
+
+function end_experiment(){
+  $("#experiment").hide();
+  $(".end").show();
+  $("#prompt").hide();
 }
 
 function change_menu(words, answer, preds){
