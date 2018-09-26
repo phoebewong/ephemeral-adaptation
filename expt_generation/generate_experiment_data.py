@@ -1,84 +1,79 @@
 import json
 import numpy as np
 
-def generate_selection_indices( n_menu_items , zipfian_dist ):
+def generate_selection_indices( n_menus , n_menu_items , zipfian_dist ):
 	##Generate the list of click locations
+	##For each item in the zipfian dist, assign a menu item to it 
+	##without replacement, then add it to the list the number of times 
+	##specified by the distribution, once for each menu, then shuffle the 
+	##resulting list and return it 
 	selection_indices = []
 	menu_indices = np.random.choice( n_menu_items , len( zipfian_dist ) ,  replace=False ) ##Sample w/out replacement the number of menu ids that we have counts for
-	for j in range( len( zipfian_dist ) ): ##For each number of counts in the zipfian dist
-		for k in range( zipfian_dist[ j ] ): ##For the number specified by the zipfian dist, add one trial
-			selection_indices.append( menu_indices[ j ] )
+	for i in range( n_menus ):
+		for j in range( len( zipfian_dist ) ): ##For each number of counts in the zipfian dist
+			for k in range( zipfian_dist[ j ] ): ##For the number specified by the zipfian dist, add one trial
+				selection_indices.append( [ i , menu_indices[ j ] ] )
 	selection_indices = np.array( selection_indices )
 	np.random.shuffle( selection_indices ) ##Shuffle menu locations
 	selection_indices = selection_indices.tolist()	
 	return selection_indices
 
-def generate_prediction_indices( selection_indices , n_corrections ):
-	prediction_indices = []
-	##Algorithm from: A Comparison of Static, Adaptive, and Adaptable Menus
-	recency_list = np.zeros( len( selection_indices ) )
-	frequency_list = np.zeros( len( selection_indices ) )
-	recency_predictions = [ 0 ]
-	frequency_predictions = [ 1 , 2 ]
-	incorrect_predictions = [] ##Keep track of whcih ones you may want to correct
-	for j , idx in enumerate( selection_indices ):
-		prediction_indices.append( frequency_predictions + recency_predictions )
+def generate_selections_and_predictions( n_menus , n_menu_items , zipfian_dist , n_recency_predictions , n_frequency_predictions , n_corrections ):
+	##Generate menu items from Zipfian distribution in each menu and randomly shuffle them
+	selection_indices = generate_selection_indices( n_menus , n_menu_items , zipfian_dist )
+	
+	##Hold onto data for recency and frequency computations
+	recent_menu_items = [ [ i for i in range( n_recency_predictions ) ] for j in range( n_menus ) ] ##Lists to hold onto most recent items in each menu
+	frequent_menu_items = np.zeros( ( n_menus , n_menu_items ) ) ##Lists to hold onto item frequencies for each menu
 
-		recency_list += 1 ##Add 1 to all recency counters
-		frequency_list[ idx ] += 1 ##Add 1 to frequency counter of current
-		recency_list[ idx ] = 0
+	incorrect_indices = [] ##Cache mistakes
+	prediction_indices = [] ##Cache predictions
+	for i , [ menu_idx , item_idx ] in enumerate( selection_indices ):
+		
+		##Grab the n_recency_predictions most recent items
+		recency_items = [ [ menu_idx , recent_menu_items[ menu_idx ][ j ] ] for j in range( n_recency_predictions ) ]
 
-		if idx not in recency_predictions and idx not in frequency_predictions: ##If the current isn't already in the partition, figure out what to do but otherwise, don't do anything
-			least_recent_id = recency_predictions[ 0 ] ##Only 1 recency item
-			least_frequent_id = frequency_predictions[ np.argmin( frequency_list[ frequency_predictions ] ) ]
+		frequency_items = [] ##Add frequency items that aren't in recency list until you hit n_frequency_predictions
+		for frequency_idx in np.argsort( frequent_menu_items[ menu_idx ] )[ ::-1 ]:
+			if len( frequency_items ) >= n_frequency_predictions:
+				break
+			if frequency_idx not in recent_menu_items[ menu_idx ]:
+				frequency_items.append( frequency_idx )
 
-			if frequency_list[ least_recent_id ] < frequency_list[ least_frequent_id ]:
-				recency_predictions[ 0 ] = idx
-			else:
-				frequency_predictions[ list( frequency_predictions ).index( least_frequent_id ) ] = recency_predictions[ 0]
-				recency_predictions[ 0 ] = idx
-			incorrect_predictions.append( j )
+		##Grab the n_recency_predictions most recent items
+		for j in range( n_frequency_predictions ):
+			frequency_items[ j ] = [ menu_idx , frequency_items[ j ] ]
 
-	##Randomly correct a few predictions to increase accuracy for high accuracy condition (these all are)
-	correct_indices = np.random.choice( incorrect_predictions , n_corrections , replace=False )
-	for idx in correct_indices:
-		replace_idx = np.random.choice( len( prediction_indices[ idx ] ) )
-		prediction_indices[ idx ][ replace_idx ] = selection_indices[ idx ]
+		predictions = recency_items + frequency_items
+		prediction_indices.append( predictions )
 
-	###Compute accuracy
-	correct_predictions = 0
-	for j in range( len( selection_indices ) ):
-		if selection_indices[ j ] in prediction_indices[ j ]:
-			correct_predictions += 1
-	accuracy = correct_predictions / float( len( selection_indices ) )
+		##If the item wasn't in the list, record it
+		if [ menu_idx , item_idx ] not in predictions:
+			incorrect_indices.append( i )
+		
+		##Update lists for next iteration
+		recent_menu_items[ menu_idx ].append( item_idx )
+		recent_menu_items[ menu_idx ] = recent_menu_items[ menu_idx ][ 1: ]
+		frequent_menu_items[ menu_idx ][ item_idx ] += 1
 
-	return prediction_indices , accuracy
+	##Compute the accuracy
+	accuracy = ( ( len( selection_indices ) - len( incorrect_indices ) ) + n_corrections ) / float( len( selection_indices ) )
 
-def generate_selection_and_prediction_locations( selection_indices , prediction_indices ):
-	selection_locations = []
-	predicted_locations = []
-	for j in range( len( selection_indices ) ):
-		menu_indices = np.random.choice( 3 , 3 , replace=False )
-		for k in menu_indices:
-			selection_locations.append( [ k , selection_indices[ j ] ] )
-			predicted_locations.append( [] )
-			for l in range( len( prediction_indices[ j ] ) ):
-				predicted_locations[ -1 ].append( [ k , prediction_indices[ j ][ l ] ] )
+	##Correct a random n_corrections of the wrong predictions
+	incorrect_indices = np.array( incorrect_indices )
+	np.random.shuffle( incorrect_indices )
+	for correction_idx in incorrect_indices[ :n_corrections ]:
+		prediction_indices[ correction_idx ][ np.random.choice( len( prediction_indices[ correction_idx ] ) ) ] = selection_indices[ correction_idx ]
 
-	return selection_locations , predicted_locations
+	return selection_indices , prediction_indices , accuracy
 
-def swap_menu_numbers_in_selection_and_prediction_locations( selection_indices , prediction_indices , c ):
-	if c > 0:
-		assert c == 1 , "Only set up for 2 conditions"
-		correspondence_list = [ [ 1 , 2 , 0 ] , [ 2 , 0 , 1 ] ][ np.random.choice( 2 ) ] ##Maps menus in condition 1 to menus in condition 2
-	else:
-		correspondence_list = [ 0 , 1 , 2 ]
-	for j in range( len( predicted_locations ) ):
-		selection_locations[ j ][ 0 ] = correspondence_list[ selection_locations[ j ][ 0 ] ]
-		for k in range( len( predicted_locations[ j ] ) ):
-			predicted_locations[ j ][ k ][ 0 ] = correspondence_list[ predicted_locations[ j ][ k ][ 0 ] ]
-
-	return selection_locations , predicted_locations
+def swap_menu_numbers( selection_indices , prediction_indices , correspondence_list ):
+	##Permute the menu numbers in the selection and prediction indices according to the numbers in correspondence list
+	for j in range( len( prediction_indices ) ):
+		selection_indices[ j ][ 0 ] = correspondence_list[ selection_indices[ j ][ 0 ] ]
+		for k in range( len( prediction_indices[ j ] ) ):
+			prediction_indices[ j ][ k ][ 0 ] = correspondence_list[ prediction_indices[ j ][ k ][ 0 ] ]
+	return selection_indices , prediction_indices
 
 def generate_word_list( word_categories , n_menus , n_menu_items ):
 	##Sample the words in each block
@@ -86,6 +81,7 @@ def generate_word_list( word_categories , n_menus , n_menu_items ):
 	sampled_categories = np.random.choice( word_categories.keys() , int( ( n_menus * n_menu_items ) / 4. ) ,  replace=False ) 
 	##Index into which menu and list of menus of words
 	menu_number = -1
+	##Go through and fill out the words in each menu
 	word_list = []
 	for k , category in enumerate( sampled_categories ):
 		##If you reach the end of the menu, move to the next
@@ -101,6 +97,14 @@ def generate_word_list( word_categories , n_menus , n_menu_items ):
 
 	return word_list
 
+def generate_selection_and_predictions_with_accuracy( min_accuracy , max_accuracy , n_menus , n_menu_items , zipfian_dist , 
+														n_recency_predictions , n_frequency_predictions , n_corrections ):	
+	##Sample experiments until you get one with the right accuracy
+	accuracy = 0.
+	while accuracy < min_accuracy or accuracy > max_accuracy:
+		selections , predictions , accuracy = generate_selections_and_predictions( n_menus , n_menu_items , zipfian_dist , 
+														n_recency_predictions , n_frequency_predictions , n_corrections )
+	return selections , predictions
 
 if __name__ == "__main__":
 
@@ -111,59 +115,78 @@ if __name__ == "__main__":
 	n_blocks = 2
 	n_menus = 3
 	n_menu_items = 16
-	n_predictions = 3
-	n_corrections = 11
+	n_recency_predictions = 1
+	n_frequency_predictions = 2
+	n_corrections = 18
 	n_practice_questions = 8
 
-	###Generate Practice Experiment Block
-	selection_indices = generate_selection_indices( n_menu_items , zipfian_dist )
-	prediction_indices , accuracy = generate_prediction_indices( selection_indices , n_corrections )
-	selection_locations , predicted_locations = generate_selection_and_prediction_locations( selection_indices , prediction_indices )
-	practice_block = {}
-	practice_block[ "selection_locations" ] = selection_locations[ :n_practice_questions ]
-	practice_block[ "predicted_locations" ] = predicted_locations
-	practice_block[ "words" ] = generate_word_list( word_categories , n_menus , n_menu_items )
+	##Keep sampling tasks until you get one with an accuracy in this range
+	min_accuracy = 0.78
+	max_accuracy = 0.81
 
-	##Generate an experiment setup for each participant
-	accuracies = []
-	participant_experiment_data = []
-	for i in range( n_participants ):
-		##Half of the experiments are control then ephemeral, and the rest are the reverse
-		if i <= n_participants / 2.:
-			condition_order = [ "control" , "ephemeral" ]
-		else:
-			condition_order = [ "ephemeral" , "control" ]
+	correspondence_list = [ 1 , 2 , 0 ] ##How to map menus to new menus in expt 2
 
-		selection_indices = generate_selection_indices( n_menu_items , zipfian_dist )
-		prediction_indices , accuracy = generate_prediction_indices( selection_indices , n_corrections )
-		accuracies.append( accuracy )
-		selection_locations , predicted_locations = generate_selection_and_prediction_locations( selection_indices , prediction_indices )
+	###Generate Practice Experiment Block with specified accuracy
+	practice_control_selections , practice_control_predictions = generate_selection_and_predictions_with_accuracy( min_accuracy , max_accuracy , 
+																	n_menus , n_menu_items , zipfian_dist , n_recency_predictions , 
+																	n_frequency_predictions , n_corrections )
+	##Truncate to first n_practice questions
+	practice_control_selections = practice_control_selections[ :n_practice_questions ]
+	practice_control_predictions = practice_control_predictions[ :n_practice_questions ]
 
-		block_list = {}
-		for c , condition in enumerate( condition_order ):
-			selection_locations , predicted_locations = swap_menu_numbers_in_selection_and_prediction_locations( selection_indices , prediction_indices , c )
-			block_list[ condition ] = []
-			for j in range( n_blocks ):	
-				block = {}
-				block[ "selection_locations" ] = selection_locations
-				block[ "predicted_locations" ] = predicted_locations
-				block[ "words" ] = generate_word_list( word_categories , n_menus , n_menu_items )
-				block_list[ condition ].append( block )
+	##Swap menu numbers for ephemeral condition
+	practice_ephemeral_selections , practice_ephemeral_predictions = swap_menu_numbers( practice_control_selections , 
+																			practice_control_predictions , correspondence_list )
+	
+	##Fill in random words in each block
+	practice_blocks = {
+		"ephemeral" : [ {
+			"selection_locations": practice_ephemeral_selections ,
+			"predicted_locations": practice_ephemeral_predictions ,
+			"words": generate_word_list( word_categories , n_menus , n_menu_items )
+		} ] ,
+		"control" : [ {
+			"selection_locations": practice_control_selections ,
+			"predicted_locations": practice_control_predictions ,
+			"words": generate_word_list( word_categories , n_menus , n_menu_items )
+		} ]
+	}
 
-		experiment_data = {
-			"condition_order": condition_order ,
-			"experiment_blocks": block_list ,
-			"practice_block": practice_block ,
-		}
-		participant_experiment_data.append( experiment_data )
+	###Generate Experiment Block with specified accuracy
+	control_selections , control_predictions = generate_selection_and_predictions_with_accuracy( min_accuracy , max_accuracy , 
+																n_menus , n_menu_items , zipfian_dist , n_recency_predictions , 
+																n_frequency_predictions , n_corrections )
 
-	print( "Mean Accuracy: " + str( np.mean( accuracies ) ) )
+	##Swap menu numbers for ephemeral condition
+	ephemeral_selections , ephemeral_predictions = swap_menu_numbers( control_selections , control_predictions , correspondence_list )
 
-	##Shuffle the generated experiments so e.g. the first 10 aren't all the same
-	participant_experiment_data = np.array( participant_experiment_data )
-	np.random.shuffle( participant_experiment_data )
-	participant_experiment_data = list( participant_experiment_data )
+	##Fill in random words in each condition and block
+	experiment_blocks = {
+		"ephemeral" : [ {
+			"selection_locations": ephemeral_selections ,
+			"predicted_locations": ephemeral_predictions ,
+			"words": generate_word_list( word_categories , n_menus , n_menu_items )
+		} for i in range( 2 ) ] ,
+		"control" : [ {
+			"selection_locations": control_selections ,
+			"predicted_locations": control_predictions ,
+			"words": generate_word_list( word_categories , n_menus , n_menu_items )
+		} for i in range( 2 ) ]
+	}
 
+	##Make an experiment for each ordering of conditions
+	experiment_1_data = {
+		"condition_order": [ "control" , "ephemeral" ] ,
+		"experiment_blocks": experiment_blocks ,
+		"practice_blocks": practice_blocks ,
+	}
+	experiment_2_data = {
+		"condition_order": [ "ephemeral" , "control" ] ,
+		"experiment_blocks": experiment_blocks ,
+		"practice_blocks": practice_blocks ,
+	}
+	participant_experiment_data = [ experiment_1_data , experiment_2_data ]
+
+	##Dump the experiment specs to a json file
 	json.dump( participant_experiment_data , open( "experiment_data.json" , "wb" ) )
 
-	
