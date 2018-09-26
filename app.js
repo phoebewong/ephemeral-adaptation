@@ -43,8 +43,8 @@ app.get("/practice", function(req, res){
 	res.render('practice.html');
 });
 
-app.get("/landing", function(req, res){
-	res.render('landing.html');
+app.get("/experiment", function(req, res){
+	res.render('experiment.html');
 });
 
 app.get("/data", function(req, res){
@@ -53,10 +53,8 @@ app.get("/data", function(req, res){
 
 //SAVE an object to the db
 app.post("/save", function(req,res){
-	console.log("A POST!!!!");
 	//Get the data from the body
 	var data = req.body;
-	console.log(data);
 	//Send the data to the db
 	Request.post({
 		url: cloudant_URL,
@@ -70,5 +68,6 @@ app.post("/save", function(req,res){
 });
 
 // Start the server
-app.listen(8000);
-console.log('Express started on port 8000');
+var port = process.env.PORT || 8000;
+app.listen(port);
+console.log('Express started on port' + port);
