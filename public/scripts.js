@@ -160,10 +160,8 @@ function record_results() {
 		contentType: "application/json",
 		type: "POST",
 		data: JSON.stringify(data),
+		success: function (resp) {},
 		error: function (resp) {
-			console.log(resp);
-		},
-		success: function (resp) {
 			console.log(resp);
 		}
 	});
