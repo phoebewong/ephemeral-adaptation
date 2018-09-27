@@ -5,8 +5,7 @@
 ### Website TODO
 
 1. Fill out practice section
-2. Log words that have been incorrectly clicked
-3. Change animation time to 0.5s
+2. Change animation time to 0.5s
 
 ### Expt Generation TODO
 
