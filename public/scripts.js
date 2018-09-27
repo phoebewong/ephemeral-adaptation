@@ -45,7 +45,8 @@ function init(){
         experiment_number = Math.floor(Math.random()*len);
         exp = data[experiment_number];
         condition_order = exp["condition_order"];
-        num_trials = 3;
+        num_trials = exp["experiment_blocks"]["control"][0]["predicted_locations"].length;
+        // num_trials = 3;
         // num_trials = 1; // Test with a smaller number of trials
         update();
       },
@@ -269,7 +270,7 @@ $(document).ready(function() {
         console.log("pushing");
       }
       all_errors[technique][block_number][trial_number]["erroneous_clicks"].push(item);
-      all_errors[technique][block_number][trial_number]["error_times"].push(item);
+      all_errors[technique][block_number][trial_number]["error_times"].push(time);
     }
   });
 });
