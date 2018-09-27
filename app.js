@@ -70,4 +70,4 @@ app.post("/save", function(req,res){
 // Start the server
 var port = process.env.PORT || 8000;
 app.listen(port);
-console.log('Express started on port' + port);
+console.log('Express started on port ' + port);

@@ -12,15 +12,25 @@
     <title>Ephemeral Adaptation Practice</title>
   </head>
   <body>
-    <h1 id="prompt"></h1>
+		
+		<h2 class="introduction1">For the following task, you will presented 3 menus.</h2>
+		<h3 class="introduction1"> You will be asked to click the menu shown on the top of the screen and then click the item listed.</h2>
+		<button type="button" class="btn btn-primary introduction1" id="introduction1-button">Next</button>
 
-		<h1 class="introduction">Welcome to the Ephemeral Adaptation User Study</h1>
-		<h2 class="introduction">Here is some information about the study.</h2>
-		<h3 class="introduction">Here is more information about the study. Click the button to begin.</h2>
-		<button type="button" class="btn btn-primary introduction" id="introduction-button">Begin Practice Block</button>
+		<h3 class="introduction2">For example:</h3>
+		<h3 class="introduction2">In this case, you should click Menu 1, then click Apple. If you click the wrong menu or item, you will not be able to proceed. You can only proceed the page when you click the right menu and item.</h3>
+		<h3 class="introduction2">You should click the menu item as quick as you can.</h3>
+		<button type="button" class="btn btn-primary introduction2" id="introduction2-button">Next</button>
 
-		<button type="button" class="btn btn-primary end" id="experiment-button" onClick="parent.location='/experiment'">Go To Experiment</button>
+		<h3 class="introduction3">In order to ensure you fully understand the task, we are going to provide a few training examples here so that you can practice with the interface.</h3>
+		<button type="button" class="btn btn-primary introduction3" id="introduction3-button">Begin Practice</button>
+		<!-- Practice blocks begin here -->
 
+		<h2 class="done">You have finished the practice block.</h2>
+		<h3 class="done">If you are ready to proceed to the main experiment, please click the button below.</h3>
+		<button type="button" class="btn btn-primary done" id="done-button" onClick="parent.location='/experiment'">Go To Experiment</button>
+
+		<h1 id="prompt"></h1>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light" id="experiment">
 
 		  <div class="collapse navbar-collapse" id="navbarSupportedContent">

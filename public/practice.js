@@ -1,14 +1,31 @@
 $(document).ready(function() {
   $("#experiment").hide();
-  $(".introduction").show();
   $("#prompt").hide();
-  $("#experiment-button").hide();
+  $(".introduction1").show();
+  $(".introduction2").hide();
+  $(".introduction3").hide();
+  $(".done").hide();
 });
 
-$("#introduction-button").on("click", function(){
-  // $("#experiment").show();
-  // $(".introduction").hide();
-  // $("#prompt").show();
-  $("#introduction-button").hide();
-  $("#experiment-button").show();
+$("#introduction1-button").on("click", function(){
+  $(".introduction1").hide();
+  $(".introduction2").show();
+});
+
+$("#introduction2-button").on("click", function(){
+  $(".introduction2").hide();
+  $(".introduction3").show();
+});
+
+$("#introduction3-button").on("click", function(){
+  $(".introduction3").hide();
+  $("#experiment").show();
+  $("#prompt").text("HENLO");
+  $("#prompt").show();
+});
+
+$(".navbar").on("click", function(){
+  $(".done").show();
+  $("#experiment").hide();
+  $("#prompt").hide();
 });
