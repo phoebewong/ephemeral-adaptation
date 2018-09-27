@@ -96,15 +96,15 @@ function increment_numbers(){
 
 function update(){
   technique = condition_order[condition];
-  answer = exp["selection_locations"][trial_number];
+  answer = exp["experiment_blocks"][technique][block_number]["selection_locations"][trial_number];
   let menu = answer[0]+1;
   correct_menu = menu;
   let section = Math.floor(answer[1]/4)+1;
   let item = (answer[1]%4)+1;
   correct_id = "#menu" + menu + "-section" + section + "-item" + item;
   let words = exp["experiment_blocks"][technique][block_number]["words"];
-  let correct = exp["selection_locations"][trial_number];
-  let preds = exp["predicted_locations"][trial_number];
+  let correct = exp["experiment_blocks"][technique][block_number]["selection_locations"][trial_number];
+  let preds = exp["experiment_blocks"][technique][block_number]["predicted_locations"][trial_number];
   abrupt_onset_words = [];
   for (let i=0; i < preds.length; i++){
     let word = words[preds[i][0]][preds[i][1]];
@@ -127,6 +127,7 @@ function log_values(time){
     "block_number": block_number,
     "correct_word": correct_word,
     "predicted_words": abrupt_onset_words,
+    "correctly_predicted": abrupt_onset_words.indexOf(correct_word) !== -1,
     "incorrect_attempts": 0,
     "incorrect_words": [],
     "incorrect_click_times":[]
