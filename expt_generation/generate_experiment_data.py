@@ -191,7 +191,7 @@ if __name__ == "__main__":
 	participant_experiment_data = [ experiment_1_data , experiment_2_data ]
 
 	##Dump the experiment specs to a json file
-	#json.dump( participant_experiment_data , open( "experiment_data.json" , "wb" ) )
+	json.dump( participant_experiment_data , open( "experiment_data.json" , "wb" ) )
 
 
 
