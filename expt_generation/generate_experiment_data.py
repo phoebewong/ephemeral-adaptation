@@ -68,6 +68,9 @@ def generate_selections_and_predictions( n_menus , n_menu_items , zipfian_dist ,
 	return selection_indices , prediction_indices , accuracy
 
 def swap_menu_numbers( selection_indices , prediction_indices , correspondence_list ):
+	selection_indices = np.copy( selection_indices ).tolist()
+	prediction_indices = np.copy( prediction_indices ).tolist()
+
 	##Permute the menu numbers in the selection and prediction indices according to the numbers in correspondence list
 	for j in range( len( prediction_indices ) ):
 		selection_indices[ j ][ 0 ] = correspondence_list[ selection_indices[ j ][ 0 ] ]
@@ -137,7 +140,7 @@ if __name__ == "__main__":
 	##Swap menu numbers for ephemeral condition
 	practice_ephemeral_selections , practice_ephemeral_predictions = swap_menu_numbers( practice_control_selections , 
 																			practice_control_predictions , correspondence_list )
-	
+
 	##Fill in random words in each block
 	practice_blocks = {
 		"ephemeral" : [ {
@@ -188,5 +191,7 @@ if __name__ == "__main__":
 	participant_experiment_data = [ experiment_1_data , experiment_2_data ]
 
 	##Dump the experiment specs to a json file
-	json.dump( participant_experiment_data , open( "experiment_data.json" , "wb" ) )
+	#json.dump( participant_experiment_data , open( "experiment_data.json" , "wb" ) )
+
+
 
