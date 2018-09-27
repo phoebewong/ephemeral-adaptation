@@ -10,6 +10,10 @@ button {
   margin: 10px;
 }
 
+#screenshot {
+  height: 266px;
+}
+
 .dropdown-item{
   padding-bottom: 0;
   padding-top: 0;

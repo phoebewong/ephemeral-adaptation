@@ -77,7 +77,6 @@ function increment_numbers(){
       block_number = 0;
       condition = condition+1;
       if (condition == 2){
-        console.log("END");
         end = 1;
       }
     }
@@ -85,12 +84,24 @@ function increment_numbers(){
   else {
     trial_number = trial_number+1;
   }
+  take_a_break_perhaps();
   if (end !== 1){
     update();
   }
-  else {
-    record_results();
-    end_experiment();
+}
+
+function take_a_break_perhaps(){
+  if (trial_number === 0 && block_number === 1){
+    $("#prompt").hide();
+    $("#experiment").hide();
+    let break_number = condition+block_number;
+    $(".intermediate-"+break_number).show();
+  }
+  else if (trial_number === 0 && block_number === 0){
+    $("#prompt").hide();
+    $("#experiment").hide();
+    let break_number = condition+block_number;
+    $(".section-break-"+break_number).show();
   }
 }
 
@@ -203,6 +214,9 @@ $(document).ready(function() {
   $(".introduction").show();
   $(".intermediate-1").hide();
   $(".intermediate-2").hide();
+  $(".section-break-1").hide();
+  $(".section-break-2").hide();
+  $(".overall-comparisons").hide();
   $(".end").hide();
   $("#log").hide();
   $("#prompt").hide();
@@ -224,4 +238,22 @@ $("#intermediate-button-2").on("click", function(){
   $(".intermediate-2").hide();
   $("#experiment").show();
   $("#prompt").show();
+});
+
+$("#section-break-button-1").on("click", function(){
+  $(".section-break-1").hide();
+  $("#experiment").show();
+  $("#prompt").show();
+});
+
+$("#section-break-button-2").on("click", function(){
+  $(".section-break-2").hide();
+  $(".overall-comparisons").show();
+});
+
+$("#overall-comparisons-button").on("click", function(){
+  record_results();
+  end_experiment();
+  $(".overall-comparisons").hide();
+  $(".end").show();
 });
