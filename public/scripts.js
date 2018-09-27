@@ -23,8 +23,18 @@ let data = {
   "trials": []
 };
 
-let qualitative_information = {
-}
+let all_errors = {
+  "control": {
+    0: [],
+    1: []
+  },
+  "ephemeral": {
+    0: [],
+    1: []
+  }
+};
+
+let qualitative_information = {};
 
 function init(){
   $.get({
@@ -35,7 +45,7 @@ function init(){
         experiment_number = Math.floor(Math.random()*len);
         exp = data[experiment_number];
         condition_order = exp["condition_order"];
-        num_trials = 30;
+        num_trials = 3;
         // num_trials = 1; // Test with a smaller number of trials
         update();
       },
@@ -121,6 +131,16 @@ function update(){
 }
 
 function log_values(time){
+  if (all_errors[technique][block_number].length === trial_number){
+    let errors = {
+      "erroneous_clicks": [],
+      "error_times": [],
+      "number_errors": 0
+    };
+    all_errors[technique][block_number].push(errors);
+    console.log("pushing");
+  }
+  all_errors[technique][block_number][trial_number]["number_errors"] = all_errors[technique][block_number][trial_number]["erroneous_clicks"].length;
   let trial = {
     "trial_number": trial_number,
     "correct_menu": correct_menu,
@@ -131,9 +151,7 @@ function log_values(time){
     "correct_word": correct_word,
     "predicted_words": abrupt_onset_words,
     "correctly_predicted": abrupt_onset_words.indexOf(correct_word) !== -1,
-    "incorrect_attempts": 0,
-    "incorrect_words": [],
-    "incorrect_click_times":[]
+    "errors":  all_errors[technique][block_number][trial_number]
   };
   data["trials"].push(trial);
 }
@@ -158,6 +176,7 @@ function record_results() {
   data["experiment_number"] = experiment_number;
   data["number_trials"] = num_trials;
   data["qualitative_information"] = qualitative_information;
+  console.log(data);
 
 	console.log("Posting data");
 	$.ajax({
@@ -235,6 +254,24 @@ $(document).ready(function() {
   $(".end").hide();
   $("#log").hide();
   $("#prompt").hide();
+  $("a").click(function(event) {
+    let click_id = event.target.id;
+    if (click_id.includes("item") && click_id.includes("menu"+correct_menu) && !(correct_id.includes(click_id))){
+      let item = click_id.substring(click_id.length-5,click_id.length)
+      let time = Date.now()-start;
+      if (all_errors[technique][block_number].length === trial_number){
+        let errors = {
+          "erroneous_clicks": [],
+          "error_times": [],
+          "number_errors": 0
+        };
+        all_errors[technique][block_number].push(errors);
+        console.log("pushing");
+      }
+      all_errors[technique][block_number][trial_number]["erroneous_clicks"].push(item);
+      all_errors[technique][block_number][trial_number]["error_times"].push(item);
+    }
+  });
 });
 
 $("#introduction-button").on("click", function(){
