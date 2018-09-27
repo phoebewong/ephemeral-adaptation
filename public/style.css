@@ -2,7 +2,7 @@ h1, h2, h3 {
   padding: 10px;
 }
 
-p {
+p, #forms, form,  {
   padding-left:10px;
 }
 
