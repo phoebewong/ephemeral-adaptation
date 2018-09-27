@@ -4,10 +4,8 @@
 
 ### Website TODO
 
-1. Qualitative information
-2. Survey after experiment (demographic information)
-3. Fill out practice section -- Should we generate a sequence and truncate it?  Should it be the same for everyone? (I think so.) At the moment this is hard coded
-4. Log words that have been incorrectly clicked
+1. Fill out practice section
+2. Log words that have been incorrectly clicked
 
 ### Expt Generation TODO
 
