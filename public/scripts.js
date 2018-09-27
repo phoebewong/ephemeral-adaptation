@@ -21,18 +21,10 @@ let data = {
   "experiment_number": "",
   "number_trials": "",
   "trials": []
-}
-
-let times = {
-  "control": {
-    0 : [],
-    1 : []
-  },
-  "ephemeral": {
-    0 : [],
-    1 : []
-  }
 };
+
+let qualitative_information = {
+}
 
 function init(){
   $.get({
@@ -43,8 +35,8 @@ function init(){
         experiment_number = Math.floor(Math.random()*len);
         exp = data[experiment_number];
         condition_order = exp["condition_order"];
-        // num_trials = exp["predicted_locations"].length;
-        num_trials = 3; // Test with a smaller number of trials
+        // num_trials = exp["experiment_blocks"][technique][block_number]["predicted_locations"][.length;
+        num_trials = 1; // Test with a smaller number of trials
         update();
       },
       error: function (err){
@@ -149,7 +141,6 @@ function log_values(time){
 function set_listener(){
   $(correct_id).on("click", function(){
     stop = Date.now();
-    times[technique][block_number].push(stop-start)
     log_values(stop-start);
     increment_numbers();
   });
@@ -166,6 +157,7 @@ function record_results() {
   data["condition_sequence"] = condition_order;
   data["experiment_number"] = experiment_number;
   data["number_trials"] = num_trials;
+  data["qualitative_information"] = qualitative_information;
 
 	console.log("Posting data");
 	$.ajax({
@@ -184,6 +176,29 @@ function end_experiment(){
   $("#experiment").hide();
   $(".end").show();
   $("#prompt").hide();
+}
+
+function save_qualitative_information(index){
+  let obj = {
+    "difficulty": $('#difficulty-'+index).val(),
+    "efficiency": $('#efficiency-'+index).val(),
+    "satisfaction": $('#satisfaction-'+index).val(),
+    "frustration": $('#frustration-'+index).val()
+  }
+  qualitative_information[condition_order[condition-1]] = obj;
+}
+
+function overall_comparisons(){
+  let demographics = {
+    "age": $('#age-overall').val(),
+    "gender": $('#gender-overall').val()
+  };
+  let overall = {
+    "easy": $('#easy-overall').val(),
+    "prefer": $('#prefer-overall').val()
+  }
+  data["demographics"] = demographics;
+  data["overall-comparisons"] = overall;
 }
 
 function change_menu(words, answer, preds){
@@ -242,16 +257,19 @@ $("#intermediate-button-2").on("click", function(){
 
 $("#section-break-button-1").on("click", function(){
   $(".section-break-1").hide();
+  save_qualitative_information(1);
   $("#experiment").show();
   $("#prompt").show();
 });
 
 $("#section-break-button-2").on("click", function(){
   $(".section-break-2").hide();
+  save_qualitative_information(2);
   $(".overall-comparisons").show();
 });
 
 $("#overall-comparisons-button").on("click", function(){
+  overall_comparisons();
   record_results();
   end_experiment();
   $(".overall-comparisons").hide();

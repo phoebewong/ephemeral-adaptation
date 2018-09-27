@@ -2,8 +2,8 @@ h1, h2, h3 {
   padding: 10px;
 }
 
-p, #forms, form,  {
-  padding-left:10px;
+p  {
+  margin:10px;
 }
 
 button {
@@ -17,6 +17,11 @@ button {
 .dropdown-item{
   padding-bottom: 0;
   padding-top: 0;
+}
+
+.custom-select {
+  margin:10px;
+  width: 50%
 }
 
 /* Help on how to fade obtained from here:
