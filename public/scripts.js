@@ -45,8 +45,8 @@ function init(){
         experiment_number = Math.floor(Math.random()*len);
         exp = data[experiment_number];
         condition_order = exp["condition_order"];
-        num_trials = exp["experiment_blocks"]["control"][0]["predicted_locations"].length;
-        // num_trials = 3;
+        // num_trials = exp["experiment_blocks"]["control"][0]["predicted_locations"].length;
+        num_trials = 3;
         // num_trials = 1; // Test with a smaller number of trials
         update();
       },
@@ -139,7 +139,6 @@ function log_values(time){
       "number_errors": 0
     };
     all_errors[technique][block_number].push(errors);
-    console.log("pushing");
   }
   all_errors[technique][block_number][trial_number]["number_errors"] = all_errors[technique][block_number][trial_number]["erroneous_clicks"].length;
   let trial = {
@@ -267,7 +266,6 @@ $(document).ready(function() {
           "number_errors": 0
         };
         all_errors[technique][block_number].push(errors);
-        console.log("pushing");
       }
       all_errors[technique][block_number][trial_number]["erroneous_clicks"].push(item);
       all_errors[technique][block_number][trial_number]["error_times"].push(time);
