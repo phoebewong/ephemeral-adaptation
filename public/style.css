@@ -18,8 +18,17 @@ button {
   margin: 10px;
 }
 
+.introduction2, .introduction3, .done, #prompt, #experiment {
+  display: none;
+}
+
+.section-break-1, .intermediate-1, .intermediate-2, .section-break-2, .end, .overall-comparisons {
+  display: none;
+}
+
 #screenshot {
   height: 266px;
+  display: none;
 }
 
 .dropdown-item{
