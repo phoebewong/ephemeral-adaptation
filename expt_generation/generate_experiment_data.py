@@ -159,25 +159,47 @@ if __name__ == "__main__":
 	}
 
 	###Generate Experiment Block with specified accuracy
-	control_selections , control_predictions = generate_selection_and_predictions_with_accuracy( min_accuracy , max_accuracy , 
+	control_selections_1 , control_predictions_1 = generate_selection_and_predictions_with_accuracy( min_accuracy , max_accuracy , 
 																n_menus , n_menu_items , zipfian_dist , n_recency_predictions , 
 																n_frequency_predictions , n_corrections )
 
 	##Swap menu numbers for ephemeral condition
-	ephemeral_selections , ephemeral_predictions = swap_menu_numbers( control_selections , control_predictions , correspondence_list )
+	ephemeral_selections_1 , ephemeral_predictions_1 = swap_menu_numbers( control_selections_1 , control_predictions_1 , correspondence_list )
+
+	###Generate Experiment Block with specified accuracy
+	control_selections_2 , control_predictions_2 = generate_selection_and_predictions_with_accuracy( min_accuracy , max_accuracy , 
+																n_menus , n_menu_items , zipfian_dist , n_recency_predictions , 
+																n_frequency_predictions , n_corrections )
+
+	##Swap menu numbers for ephemeral condition
+	ephemeral_selections_2 , ephemeral_predictions_2 = swap_menu_numbers( control_selections_2 , control_predictions_2 , correspondence_list )
 
 	##Fill in random words in each condition and block
 	experiment_blocks = {
-		"ephemeral" : [ {
-			"selection_locations": ephemeral_selections ,
-			"predicted_locations": ephemeral_predictions ,
-			"words": generate_word_list( word_categories , n_menus , n_menu_items )
-		} for i in range( 2 ) ] ,
-		"control" : [ {
-			"selection_locations": control_selections ,
-			"predicted_locations": control_predictions ,
-			"words": generate_word_list( word_categories , n_menus , n_menu_items )
-		} for i in range( 2 ) ]
+		"ephemeral" : [ 
+			{
+				"selection_locations": ephemeral_selections_1 ,
+				"predicted_locations": ephemeral_predictions_1 ,
+				"words": generate_word_list( word_categories , n_menus , n_menu_items )
+			} ,
+			{
+				"selection_locations": ephemeral_selections_2 ,
+				"predicted_locations": ephemeral_predictions_2 ,
+				"words": generate_word_list( word_categories , n_menus , n_menu_items )
+			}
+		 ] ,
+		"control" : [ 
+			{
+				"selection_locations": control_selections_1 ,
+				"predicted_locations": control_predictions_1 ,
+				"words": generate_word_list( word_categories , n_menus , n_menu_items )
+			} ,
+			{
+				"selection_locations": control_selections_2 ,
+				"predicted_locations": control_predictions_2 ,
+				"words": generate_word_list( word_categories , n_menus , n_menu_items )
+			} 
+		] 
 	}
 
 	##Make an experiment for each ordering of conditions
