@@ -58,6 +58,7 @@ def generate_selections_and_predictions( n_menus , n_menu_items , zipfian_dist ,
 
 	##Compute the accuracy
 	accuracy = ( ( len( selection_indices ) - len( incorrect_indices ) ) + n_corrections ) / float( len( selection_indices ) )
+	#print( str( accuracy ) + " - " + str( len( selection_indices ) ) )
 
 	##Correct a random n_corrections of the wrong predictions
 	incorrect_indices = np.array( incorrect_indices )
@@ -112,7 +113,8 @@ def generate_selection_and_predictions_with_accuracy( min_accuracy , max_accurac
 if __name__ == "__main__":
 
 	##Parameters of the experiment
-	zipfian_dist = [ 15 , 8 , 5 , 4 , 3 , 3 , 2 , 2 ]
+	#zipfian_dist = [ 15 , 8 , 5 , 4 , 3 , 3 , 2 , 2 ]
+	zipfian_dist = [ 5 , 4 , 3 , 3 ]
 	word_categories = json.load( open( "categories.json" , "rb" ) )
 	n_participants = 15
 	n_blocks = 2
@@ -120,7 +122,8 @@ if __name__ == "__main__":
 	n_menu_items = 16
 	n_recency_predictions = 1
 	n_frequency_predictions = 2
-	n_corrections = 18
+	n_corrections = 5 #10
+	#n_corrections = 18
 	n_practice_questions = 8
 
 	##Keep sampling tasks until you get one with an accuracy in this range
