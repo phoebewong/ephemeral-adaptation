@@ -2,11 +2,6 @@
 
 ## TODO
 
-### Website TODO
-
-1. Fill out practice section
-2. Change animation time to 0.5s
-
 ### Expt Generation TODO
 
 1. Update prediction algorithm to have 3 items highlighted instead of 4
