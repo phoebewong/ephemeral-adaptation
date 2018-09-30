@@ -45,8 +45,7 @@ function init(){
         experiment_number = Math.floor(Math.random()*len);
         exp = data[experiment_number];
         condition_order = exp["condition_order"];
-        // num_trials = exp["experiment_blocks"]["control"][0]["predicted_locations"].length;
-        num_trials = 3;
+        num_trials = exp["experiment_blocks"]["control"][0]["predicted_locations"].length;
         // num_trials = 1; // Test with a smaller number of trials
         update();
       },
@@ -151,7 +150,8 @@ function log_values(time){
     "correct_word": correct_word,
     "predicted_words": abrupt_onset_words,
     "correctly_predicted": abrupt_onset_words.indexOf(correct_word) !== -1,
-    "errors":  all_errors[technique][block_number][trial_number]
+    "errors":  all_errors[technique][block_number][trial_number],
+    "timestamp": new Date().toLocaleString()
   };
   data["trials"].push(trial);
 }
@@ -166,6 +166,12 @@ function set_listener(){
     if (started == 0){
       started = 1;
       start = Date.now();
+      // var a = setInterval(function(){
+      //   console.log($("#menu2-section1-item3").css("opacity"));
+      //   if (Date.now()-700>start){
+      //     clearInterval(a);
+      //   }
+      // }, 60);
     }
   });
 }
@@ -292,22 +298,52 @@ $("#intermediate-button-2").on("click", function(){
 });
 
 $("#section-break-button-1").on("click", function(){
-  $(".section-break-1").hide();
-  save_qualitative_information(1);
-  $("#experiment").show();
-  $("#prompt").show();
+  let dif = $('#difficulty-1').val();
+  let eff = $('#efficiency-1').val();
+  let sat = $('#satisfaction-1').val();
+  let fru = $('#frustration-1').val();
+  if (dif === "0" || eff === "0" || sat === "0" || fru === "0"){
+    $("#section1-error").addClass("red");
+    return;
+  }
+  else {
+    $(".section-break-1").hide();
+    save_qualitative_information(1);
+    $("#experiment").show();
+    $("#prompt").show();
+  }
 });
 
 $("#section-break-button-2").on("click", function(){
-  $(".section-break-2").hide();
-  save_qualitative_information(2);
-  $(".overall-comparisons").show();
+  let dif = $('#difficulty-2').val();
+  let eff = $('#efficiency-2').val();
+  let sat = $('#satisfaction-2').val();
+  let fru = $('#frustration-2').val();
+  if (dif === "0" || eff === "0" || sat === "0" || fru === "0"){
+    $("#section2-error").addClass("red");
+    return;
+  }
+  else {
+    $(".section-break-2").hide();
+    save_qualitative_information(2);
+    $(".overall-comparisons").show();
+  }
 });
 
 $("#overall-comparisons-button").on("click", function(){
-  overall_comparisons();
-  record_results();
-  end_experiment();
-  $(".overall-comparisons").hide();
-  $(".end").show();
+  let age = $('#age-overall').val();
+  let gender = $('#gender-overall').val();
+  let easy = $('#easy-overall').val();
+  let prefer = $('#prefer-overall').val();
+  if (age === "0" || gender === "0" || easy === "0" || prefer === "0"){
+    $("#overall-error").addClass("red");
+    return;
+  }
+  else {
+    overall_comparisons();
+    record_results();
+    end_experiment();
+    $(".overall-comparisons").hide();
+    $(".end").show();
+  }
 });
