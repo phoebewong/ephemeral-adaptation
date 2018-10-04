@@ -1,13 +1,17 @@
+import os
 import json
 import numpy as np
 import pandas as pd
 
-fnames = [ "example.json" ]
+dir_name = "data/"
 
-time_columns = [ "participant_number" , "age" , "gender" , "condition" , "menu_order" , "selection_time" , "correctly_predicted" , "error_in_trial" ] 
+time_columns = [ "participant_number" , "condition" , "menu_order" , "selection_time" , "correctly_predicted" , "error_in_trial" ] 
 time_matrix = []
-for i , fname in enumerate( fnames ):
-	data = json.load( open( "data/" + fname , "rb" ) )
+for i , fname in enumerate( os.listdir( dir_name ) ):
+	if ".json" not in fname:
+		continue
+
+	data = json.load( open( dir_name + fname , "rb" ) )
 
 	age = data[ "demographics" ][ "age" ]
 	gender = data[ "demographics" ][ "gender" ]
@@ -20,7 +24,7 @@ for i , fname in enumerate( fnames ):
 		predicted = trial[ "correctly_predicted" ]
 		error = ( trial[ "errors" ][ "number_errors" ] > 0 )
 
-		row = [ i , age , gender , condition , order , time , predicted , error ]
+		row = [ i , condition , order , time , predicted , error ]
 		time_matrix.append( row )
 
 time_df = pd.DataFrame( time_matrix , columns=time_columns )
@@ -31,8 +35,11 @@ qualitative_columns = [ "participant_number" , "age" , "gender" , "menu_order" ,
 						"ephemeral_satisfaction" , "ephemeral_difficulty" , "ephemeral_frustration" , "ephemeral_efficiency" ] 
 
 qualitative_matrix = []
-for i , fname in enumerate( fnames ):
-	data = json.load( open( "data/" + fname , "rb" ) )
+for i , fname in enumerate( os.listdir( dir_name ) ):
+	if ".json" not in fname:
+		continue
+	
+	data = json.load( open( dir_name + fname , "rb" ) )
 
 	age = data[ "demographics" ][ "age" ]
 	gender = data[ "demographics" ][ "gender" ]
