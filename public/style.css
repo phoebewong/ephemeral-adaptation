@@ -18,7 +18,7 @@ button {
   margin: 10px;
 }
 
-.introduction2, .introduction3, .done, #prompt, #experiment {
+.introduction2, .introduction3, .done, .middle, #prompt, #experiment {
   display: none;
 }
 
