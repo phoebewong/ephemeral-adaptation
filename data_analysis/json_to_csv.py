@@ -5,13 +5,14 @@ import pandas as pd
 
 dir_name = "data/"
 
-time_columns = [ "participant_number" , "condition" , "menu_order" , "selection_time" , "correctly_predicted" , "error_in_trial" ] 
+time_columns = [ "participant_number" , "condition" , "menu_order" , "selection_time" , "correctly_predicted" , "error_in_trial" ]
 time_matrix = []
 for i , fname in enumerate( os.listdir( dir_name ) ):
 	if ".json" not in fname:
 		continue
 
-	data = json.load( open( dir_name + fname , "rb" ) )
+	data = json.load( open( dir_name + fname , "rb" ) )["doc"]
+
 
 	age = data[ "demographics" ][ "age" ]
 	gender = data[ "demographics" ][ "gender" ]
@@ -30,16 +31,16 @@ for i , fname in enumerate( os.listdir( dir_name ) ):
 time_df = pd.DataFrame( time_matrix , columns=time_columns )
 time_df.to_csv( open( "data/time_data.csv" , "w" ) , index=False )
 
-qualitative_columns = [ "participant_number" , "age" , "gender" , "menu_order" , "overall_preference" , "overall_easy" , 
-						"control_satisfaction" , "control_difficulty" , "control_frustration" , "control_efficiency" , 
-						"ephemeral_satisfaction" , "ephemeral_difficulty" , "ephemeral_frustration" , "ephemeral_efficiency" ] 
+qualitative_columns = [ "participant_number" , "age" , "gender" , "menu_order" , "overall_preference" , "overall_easy" ,
+						"control_satisfaction" , "control_difficulty" , "control_frustration" , "control_efficiency" ,
+						"ephemeral_satisfaction" , "ephemeral_difficulty" , "ephemeral_frustration" , "ephemeral_efficiency" ]
 
 qualitative_matrix = []
 for i , fname in enumerate( os.listdir( dir_name ) ):
 	if ".json" not in fname:
 		continue
-	
-	data = json.load( open( dir_name + fname , "rb" ) )
+
+	data = json.load( open( dir_name + fname , "rb" ) )["doc"]
 
 	age = data[ "demographics" ][ "age" ]
 	gender = data[ "demographics" ][ "gender" ]
@@ -58,7 +59,7 @@ for i , fname in enumerate( os.listdir( dir_name ) ):
 	ephemeral_frustration = 	data[ 'qualitative_information' ][ 'ephemeral' ][ 'frustration' ]
 	ephemeral_efficiency = 	data[ 'qualitative_information' ][ 'ephemeral' ][ 'efficiency' ]
 
-	row = [ i , age , gender , order , overall_preference , overall_easy , 
+	row = [ i , age , gender , order , overall_preference , overall_easy ,
 			control_satisfaction , control_difficulty , control_frustration , control_efficiency ,
 			ephemeral_satisfaction , ephemeral_difficulty , ephemeral_frustration , ephemeral_efficiency ]
 
@@ -66,4 +67,3 @@ for i , fname in enumerate( os.listdir( dir_name ) ):
 
 qualitative_df = pd.DataFrame( qualitative_matrix , columns=qualitative_columns )
 qualitative_df.to_csv( open( "data/qualitative_data.csv" , "w" ) , index=False )
-
